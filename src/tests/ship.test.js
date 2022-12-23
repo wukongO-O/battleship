@@ -1,5 +1,3 @@
-//const Ship = require('../modules/ship');
-
 import { Ship } from '../modules/ship';
 
 describe('ship of size 2', () => {
