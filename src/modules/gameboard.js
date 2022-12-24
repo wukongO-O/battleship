@@ -7,23 +7,24 @@ const Gameboard = () => {
         grid[i] = Array(10);
     };
 
-    //const selectedShip = Ship (shipSize);
-
     let shipLocations = {};
 
     const placeShip = (x, y, ship, orientation) => {
-        
-        shipLocations[ship] = shipOrientation(x, y, ship, orientation);
+        if (shipInbounds(x, y, ship, orientation) === true && openSpots(x, y, ship, orientation) === true) {
+            shipLocations[ship] = shipCoords(x, y, ship, orientation);
 
-        shipLocations[ship].forEach(([a, b]) => {
-            grid[a][b] = {
-                shipName: ship
-            };
-        })
-        return shipLocations[ship];
+            shipLocations[ship].forEach(([a, b]) => {
+                grid[a][b] = {
+                    shipName: ship
+                };
+            })
+            return shipLocations[ship];
+        } else {
+            return [];
+        };
     };
-
-    const shipOrientation = (x, y, ship, orientation) => {
+    //3 helpers for placeShip
+    const shipCoords = (x, y, ship, orientation) => {
         let shipXYs = [];
         
         for (let i = 0; i < ship.shipLength; i++) {
@@ -36,8 +37,26 @@ const Gameboard = () => {
 
         return shipXYs;
     };
-    const shipInbounds = (x, y, ship) => {
+    const shipInbounds = (x, y, ship, orientation) => {
+        if (orientation === 'vertical') {
+            const verRowInbounds = 0 <= x && x < 10 && (x + ship.shipLength) < 10;
+            const verColumnInbounds = 0 <= y < 10;
 
+            if (! verRowInbounds || ! verColumnInbounds) return false;
+        };
+
+        const horRowInbounds = 0 <= x && x < 10;
+        const horColumnInbounds = 0 <= y && y < 10 && (y + ship.shipLength) < 10;
+
+        if (! horRowInbounds || !horColumnInbounds) return false;
+
+        return true;
+    };
+    const openSpots = (x, y, ship, orientation) => {
+        const spots = shipCoords(x, y, ship, orientation);
+        const isOpen = spots.every(xy => grid[xy[0]][xy[1]] === undefined);
+        
+        return isOpen;
     };
 
     const receiveAttack = (x, y) => {

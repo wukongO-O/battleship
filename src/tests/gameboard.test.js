@@ -32,7 +32,7 @@ describe('gameboard functions', () => {
         });
 
         test('disable vertically placing a ship of size 3 out of bounds', () => {
-
+            expect(board.placeShip(8, 4, Ship(3), 'vertical')).toEqual([]);
         });
 
 
