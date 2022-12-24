@@ -28,7 +28,7 @@ describe('gameboard functions', () => {
         });
 
         test('vertically place a ship of size 3', () => {
-
+            expect(board.placeShip(1, 1, Ship(3), 'vertical')).toEqual([[1, 1], [2, 1], [3, 1]]);
         });
 
         test('disable vertically placing a ship of size 3 out of bounds', () => {

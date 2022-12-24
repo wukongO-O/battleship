@@ -7,24 +7,38 @@ const Gameboard = () => {
         grid[i] = Array(10);
     };
 
-    const selectedShip = Ship (shipSize);
+    //const selectedShip = Ship (shipSize);
 
-    let shipLocations = [];
+    let shipLocations = {};
 
-    const placeShip = (x, y, ship) => {
+    const placeShip = (x, y, ship, orientation) => {
         
-        shipLocations.ship = [];
-        for (let i = x; i < (x + ship.shipLength); i++ ) {
-            grid[i][y] = {
+        shipLocations[ship] = shipOrientation(x, y, ship, orientation);
+
+        shipLocations[ship].forEach(([a, b]) => {
+            grid[a][b] = {
                 shipName: ship
             };
-            shipLocations.push(grid[i][y]);
-        };
+        })
+        return shipLocations[ship];
     };
 
-    const rotateShip = (x, y, ship) => {
+    const shipOrientation = (x, y, ship, orientation) => {
+        let shipXYs = [];
         
-    }
+        for (let i = 0; i < ship.shipLength; i++) {
+            if (orientation === 'vertical') {
+                shipXYs.push([x + i, y]);
+            } else {
+                shipXYs.push([x, y + i]);
+            };
+        };
+
+        return shipXYs;
+    };
+    const shipInbounds = (x, y, ship) => {
+
+    };
 
     const receiveAttack = (x, y) => {
         if (grid[x][y] === null) missedAttacks(x, y);
@@ -47,6 +61,7 @@ const Gameboard = () => {
     };
 
     return {
+        grid,
         placeShip,
         receiveAttack,
         missedAttacks,
