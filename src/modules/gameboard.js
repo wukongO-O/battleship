@@ -7,18 +7,21 @@ const Gameboard = () => {
         grid[i] = Array(10);
     };
 
-    let shipLocations = {};
+    let shipLocations = [];
+    let ships = [];
+    let missedShots = [];
 
     const placeShip = (x, y, ship, orientation) => {
         if (shipInbounds(x, y, ship, orientation) === true && openSpots(x, y, ship, orientation) === true) {
-            shipLocations[ship] = shipCoords(x, y, ship, orientation);
+            shipLocations.push(shipCoords(x, y, ship, orientation));
+            ships.push(ship);
 
-            shipLocations[ship].forEach(([a, b]) => {
+            shipLocations[shipLocations.length - 1].forEach(([a, b]) => {
                 grid[a][b] = {
                     shipName: ship
                 };
             })
-            return shipLocations[ship];
+            return shipLocations[shipLocations.length - 1];
         } else {
             return [];
         };
@@ -60,31 +63,34 @@ const Gameboard = () => {
     };
 
     const receiveAttack = (x, y) => {
-        if (grid[x][y] === null) missedAttacks(x, y);
-        if (grid[x][y] != 'empty shot') {
+        if (grid[x][y] === undefined) {
+            missedAttacks(x, y);
+        } else {
             const attackedShip = grid[x][y].shipName;
             attackedShip.hit();
-            grid[x][y].hitStatus = 'hit';
+            return grid[x][y].hitStatus = 'hit';
         }
     };
     //need to add status display
     const missedAttacks = (x, y) => {
-        return grid[x][y] === 'missed shot';
+        missedShots.push([x, y]);
+        return grid[x][y] = 'missed shot';
     };
 
-    const shipStatus = () => {
-        if (shipLocations.every(spot => spot.hitStatus == 'hit'))
-         {
-            alert('Player ? won');
-         }
+    const allShipsSunk = () => { 
+        if (ships.every(ship => ship.isSunk() === false)) return 'not all ships are sunk';
+
+        return 'all ships are sunk';
     };
 
     return {
         grid,
+        shipLocations,
+        missedShots,
         placeShip,
         receiveAttack,
         missedAttacks,
-        shipStatus
+        allShipsSunk
     }
 };
 
