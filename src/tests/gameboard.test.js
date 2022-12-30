@@ -35,6 +35,23 @@ describe('gameboard functions', () => {
             expect(board.placeShip(8, 4, Ship(3), 'vertical')).toEqual([]);
         });
 
+        describe('attacks & ship status', () => {
+            test('receive an attack on ship of size 3', () => {
+                board.receiveAttack(1, 1);
+                expect(board.grid[1][1].hitStatus).toEqual('hit');
+            });
+
+            test('attack an empty spot', () => {
+                board.receiveAttack(4, 1);
+                expect(board.grid[4][1]).toEqual('missed shot');
+            });
+
+            test('size-3 ship status is not sunk', () => {
+                expect(board.shipStatus()).toEqual('not all ships are sunk');
+            });
+
+        });
+
 
     });
     beforeEach(() => {
