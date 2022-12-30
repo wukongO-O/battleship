@@ -46,16 +46,22 @@ describe('gameboard functions', () => {
                 expect(board.grid[4][1]).toEqual('missed shot');
             });
 
-            test('size-3 ship status is not sunk', () => {
-                expect(board.shipStatus()).toEqual('not all ships are sunk');
+            test('ships are not yet all sunk', () => {
+                expect(board.allShipsSunk()).toEqual('not all ships are sunk');
             });
 
+            test('tracking missed shots', () => {
+                board.receiveAttack(8, 8);
+                expect(board.missedShots).toEqual([[4, 1], [8, 8]]);
+            });
+
+            test('sink all ships', () => {
+                const locs = board.shipLocations.flat(1);
+                locs.forEach(xy => {
+                    board.receiveAttack(xy[0], xy[1]);
+                });
+                expect(board.allShipsSunk()).toEqual('all ships are sunk');
+            });
         });
-
-
     });
-    beforeEach(() => {
-
-    })
-
-})
+});
