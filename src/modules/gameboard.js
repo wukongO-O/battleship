@@ -1,4 +1,3 @@
-import { Ship } from './ship';
 
 const Gameboard = () => {
     //create the 10 x 10 gameboard via 2-d array
@@ -87,13 +86,13 @@ const Gameboard = () => {
     const receiveAttack = (x, y) => {
         if (grid[x][y] === undefined) {
             missedAttacks(x, y);
-        } else {
+        } else if (grid[x][y] != 'missed shot') {
             const attackedShip = grid[x][y].shipName;
             attackedShip.hit();
             return grid[x][y].hitStatus = 'hit';
-        }
+        };
     };
-    //need to add status display
+    //need to add status display later
     const missedAttacks = (x, y) => {
         missedShots.push([x, y]);
         return grid[x][y] = 'missed shot';
@@ -117,7 +116,7 @@ const Gameboard = () => {
     }
 };
 
-  //random coords helpers
+//random coords helpers
 const randomNum = (max) => {
     return Number(Math.floor(Math.random() * (max+1)));
 };

@@ -3,8 +3,7 @@ const Ship = (shipLen) => {
     let hitCount = 0;
 
     const hit = () => {
-        hitCount += 1;
-        return hitCount;
+        return hitCount += 1;
     };
 
     const isSunk = () => {
@@ -20,5 +19,6 @@ const Ship = (shipLen) => {
     }
 };
 
-export default Ship;
+export { Ship } ;
+
 
