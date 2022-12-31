@@ -46,13 +46,12 @@ const Gameboard = () => {
             const verColumnInbounds = 0 <= y < 10;
 
             if (! verRowInbounds || ! verColumnInbounds) return false;
+        } else {
+            const horRowInbounds = 0 <= x && x < 10;
+            const horColumnInbounds = 0 <= y && y < 10 && (y + ship.shipLength) < 10;
+    
+            if (! horRowInbounds || !horColumnInbounds) return false;
         };
-
-        const horRowInbounds = 0 <= x && x < 10;
-        const horColumnInbounds = 0 <= y && y < 10 && (y + ship.shipLength) < 10;
-
-        if (! horRowInbounds || !horColumnInbounds) return false;
-
         return true;
     };
     const openSpots = (x, y, ship, orientation) => {
@@ -60,6 +59,29 @@ const Gameboard = () => {
         const isOpen = spots.every(xy => grid[xy[0]][xy[1]] === undefined);
         
         return isOpen;
+    };
+
+    //automatically place ship for ai player
+    let xys_ai = new Set();
+    const placeShip_ai = (ship) => {
+        const [x0, y0, direction] = validAIxy(ship);
+        placeShip(x0, y0, ship, direction);
+    };
+
+    const validAIxy = (ship) => {
+        let [x1, y1] = randomXY(xys_ai);
+
+        while (shipInbounds(x1, y1, ship) === false && shipInbounds(x1, y1, ship, 'vertical') === false || 
+        openSpots(x1, y1, ship) === false && openSpots(x1, y1, ship, 'vertical') === false) {
+            xys_ai.delete([x1, y1]);
+            [x1, y1] = randomXY(xys_ai);
+        };
+
+        if (shipInbounds(x1, y1, ship) === true) {
+            return [x1, y1, 'horizontal'];
+        } else {
+            return [x1, y1, 'vertical'];
+        }; 
     };
 
     const receiveAttack = (x, y) => {
@@ -88,10 +110,29 @@ const Gameboard = () => {
         shipLocations,
         missedShots,
         placeShip,
+        placeShip_ai,
         receiveAttack,
         missedAttacks,
         allShipsSunk
     }
 };
 
-export { Gameboard };
+  //random coords helpers
+const randomNum = (max) => {
+    return Number(Math.floor(Math.random() * (max+1)));
+};
+const randomXY = (markedSpotsSet) => {
+    let randomX = randomNum(9);
+    let randomY = randomNum(9);
+    markedSpotsSet.add([randomX, randomY]);
+    while (markedSpotsSet.has([randomX, randomY])) {
+        randomX = randomNum(9);
+        randomY = randomNum(9);
+    }
+    return [randomX, randomY];
+};
+
+export { 
+    Gameboard, 
+    randomXY 
+};
