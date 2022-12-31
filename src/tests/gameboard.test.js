@@ -83,4 +83,4 @@ describe('placing ships for AI player', () => {
         aiBoard.placeShip_ai(Ship(6));
         expect(aiBoard.shipLocations[2].length).toEqual(6);
     });
-})
+});
