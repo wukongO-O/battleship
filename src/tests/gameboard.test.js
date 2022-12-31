@@ -65,3 +65,22 @@ describe('gameboard functions', () => {
         });
     });
 });
+
+describe('placing ships for AI player', () => {
+    const aiBoard = Gameboard();
+
+    test('randomly place a ship of size 3', () => {
+        aiBoard.placeShip_ai(Ship(3));
+        expect(aiBoard.shipLocations[0].length).toEqual(3);
+    });
+
+    test('randomly place a ship of size 5', () => {
+        aiBoard.placeShip_ai(Ship(5));
+        expect(aiBoard.shipLocations[1].length).toEqual(5);
+    });
+
+    test('randomly place a ship of size 6', () => {
+        aiBoard.placeShip_ai(Ship(6));
+        expect(aiBoard.shipLocations[2].length).toEqual(6);
+    });
+})
